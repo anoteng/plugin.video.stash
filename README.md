@@ -81,3 +81,17 @@ scene that is currently playing, bind a key in a
   </FullscreenVideo>
 </keymap>
 ```
+
+## Performers
+Use *Performers in scene…* in a scene's context menu to show a performer's
+scenes, show information about the performer or add/remove the performer as
+favourite. Performer listings have *Information* in their context menu.
+
+Known limitations, caused by how Kodi's information dialog works for add-on
+items:
+
+- Selecting a performer in the cast list of a scene's information dialog
+  searches Kodi's own video library, which does not contain Stash scenes, so
+  nothing is found. Use *Performers in scene…* instead.
+- The play button in a performer's information dialog does nothing useful;
+  use *Show scenes* instead.

@@ -248,10 +248,7 @@ def scene_performers(params: dict):
     actions = [loc(30053), loc(30054), loc(30040 if performer['favorite'] else 30039)]
     action = xbmcgui.Dialog().contextmenu(actions)
     if action == 0:
-        criterion = {'performers': {'modifier': 'INCLUDES_ALL', 'value': [performer['id']]}}
-        url = utils.get_url(list='scenes', title=performer['name'], criterion=json.dumps(criterion),
-                            sort_field='date', sort_dir='desc')
-        xbmc.executebuiltin('Container.Update({})'.format(url))
+        xbmc.executebuiltin('Container.Update({})'.format(performer_scenes_url(performer['id'], performer['name'])))
     elif action == 1:
         performer_info({'performer_info': performer['id']})
     elif action == 2:
@@ -307,6 +304,12 @@ def performer_info(params: dict):
     if image:
         item.setArt({'thumb': image, 'poster': image})
     xbmcgui.Dialog().info(item)
+
+
+def performer_scenes_url(performer_id, name: str) -> str:
+    criterion = {'performers': {'modifier': 'INCLUDES_ALL', 'value': [performer_id]}}
+    return utils.get_url(list='scenes', title=name, criterion=json.dumps(criterion), sort_field='date',
+                         sort_dir='desc')
 
 
 def router(param_string: str):
