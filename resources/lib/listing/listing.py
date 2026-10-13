@@ -137,6 +137,12 @@ class Listing(ABC):
 
         return item
 
+    def create_queue_item(self, scene: dict) -> xbmcgui.ListItem:
+        item = self._create_item(scene)
+        # The resume point is applied by the service when chosen in play_from
+        item.getVideoInfoTag().setResumePoint(0.0)
+        return item
+
     def _context_menu(self, params: dict) -> [(str, str)]:
         if not self.sort_options():
             return []

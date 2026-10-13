@@ -17,6 +17,17 @@ def page_size() -> int:
         return 40
 
 
+def autoplay() -> bool:
+    return xbmcaddon.Addon().getSetting('autoplay') == 'true'
+
+
+def duration(seconds: float) -> str:
+    seconds = int(seconds)
+    if seconds >= 3600:
+        return '{}:{:02d}:{:02d}'.format(seconds // 3600, seconds // 60 % 60, seconds % 60)
+    return '{}:{:02d}'.format(seconds // 60, seconds % 60)
+
+
 def kodi_datetime(iso: str) -> str:
     """Stash RFC 3339 timestamp (2024-06-29T12:34:56+02:00) to Kodi's 2024-06-29 12:34:56"""
     if not iso:

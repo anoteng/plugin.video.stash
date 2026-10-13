@@ -15,6 +15,8 @@ SAVE_INTERVAL = 30
 # Like Stash' player: playing (almost) to the end clears the resume point
 FINISHED_PERCENT = 98
 PLAYING_PROPERTY = 'plugin.video.stash.playing_scene'
+# "<scene id>:<seconds>", set by play_from when the user chooses to resume
+START_OFFSET_PROPERTY = 'plugin.video.stash.start_offset'
 
 
 def log(message: str):
@@ -77,7 +79,12 @@ class Player(xbmc.Player):
                 return
             self.session = Session(stash, match.group(1), self.getTotalTime(), stash.ui_configuration())
             self.ended = False
-            xbmcgui.Window(10000).setProperty(PLAYING_PROPERTY, self.session.scene_id)
+            window = xbmcgui.Window(10000)
+            window.setProperty(PLAYING_PROPERTY, self.session.scene_id)
+            (offset_scene, _, offset) = window.getProperty(START_OFFSET_PROPERTY).partition(':')
+            window.clearProperty(START_OFFSET_PROPERTY)
+            if offset_scene == self.session.scene_id:
+                self.seekTime(float(offset))
         except Exception as e:
             log('could not start tracking: {}'.format(e))
             self.session = None

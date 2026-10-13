@@ -10,7 +10,7 @@ import xbmcplugin
 from resources.lib import utils
 from resources.lib.listing import create_listing, Listing, SceneListing
 from resources.lib.navigation import NavigationItem, PerformerItem, TagItem
-from resources.lib.service import PLAYING_PROPERTY
+from resources.lib.service import PLAYING_PROPERTY, START_OFFSET_PROPERTY
 from resources.lib.stash_interface import StashInterface
 
 utils.BASE_URL = sys.argv[0]
@@ -158,6 +158,29 @@ def choose_sort(params: dict):
     xbmc.executebuiltin('Container.Update({},replace)'.format(utils.get_url(**params)))
 
 
+def play_from(params: dict):
+    loc = utils.local.get_localized
+    scene_id = params.pop('play_from')
+    listing = SceneListing(client)
+    scenes = listing.queue(params, scene_id, utils.page_size())
+
+    resume = float(scenes[0].get('resume_time') or 0)
+    if resume > 0:
+        choice = xbmcgui.Dialog().contextmenu(
+            ['{} {}'.format(loc(30047), utils.duration(resume)), loc(30048)])
+        if choice < 0:
+            return
+        if choice == 0:
+            xbmcgui.Window(10000).setProperty(START_OFFSET_PROPERTY, '{}:{}'.format(scene_id, resume))
+
+    playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+    playlist.clear()
+    for scene in scenes:
+        item = listing.create_queue_item(scene)
+        playlist.add(Listing._create_play_url(scene['id']), item)
+    xbmc.Player().play(playlist)
+
+
 def get_mp4_stream(sceneStreams: dict) -> str:
     for stream in sceneStreams:
         if stream["label"] == "DASH":
@@ -226,7 +249,9 @@ def router(param_string: str):
     params = dict(parse_qsl(param_string, keep_blank_values=True))
 
     if params:
-        if 'choose_sort' in params:
+        if 'play_from' in params:
+            play_from(params)
+        elif 'choose_sort' in params:
             choose_sort(params)
         elif 'search' in params:
             search(params)

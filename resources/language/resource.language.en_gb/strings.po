@@ -201,3 +201,15 @@ msgstr ""
 msgctxt "#30046"
 msgid "removed from favourites"
 msgstr ""
+
+msgctxt "#30047"
+msgid "Resume from"
+msgstr ""
+
+msgctxt "#30048"
+msgid "Play from beginning"
+msgstr ""
+
+msgctxt "#30049"
+msgid "Play next scene automatically"
+msgstr ""

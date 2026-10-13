@@ -1,9 +1,10 @@
+import json
 from typing import Optional
 import xbmcgui
 
 from .listing import Listing
 from resources.lib.stash_interface import StashInterface
-from resources.lib.utils import local, get_url
+from resources.lib.utils import local, get_url, autoplay
 from resources.lib.navigation import NavigationItem, StudioItem, TagItem, PerformerItem
 
 
@@ -48,10 +49,16 @@ class SceneListing(Listing):
         (count, scenes) = self._client.find_scenes(criterion, sort_field, sort_dir, page=page, per_page=per_page,
                                                    q=params.get('q'))
         sort_menu = self._context_menu(params)
+        play_next = autoplay()
         items = []
         for scene in scenes:
             item = self._create_item(scene)
-            url = self._create_play_url(scene['id'])
+            if play_next:
+                # Not playable itself: play_from builds a playlist starting at this scene
+                url = get_url(**dict(params, play_from=scene['id']))
+                item.setProperty('IsPlayable', 'false')
+            else:
+                url = self._create_play_url(scene['id'])
 
             menu = []
             if len(scene['scene_markers']) > 0:
@@ -68,3 +75,15 @@ class SceneListing(Listing):
             items.append((item, url))
 
         return count, items
+
+    def queue(self, params: dict, scene_id: str, per_page: int) -> [dict]:
+        """The scene and the ones after it in the listing it was started from (this page and the next)"""
+        criterion = json.loads(params['criterion']) if 'criterion' in params else {}
+        page = int(params.get('page', 1))
+        args = dict(sort_field=params.get('sort_field'), sort_dir=params.get('sort_dir', 'asc'), per_page=per_page,
+                    q=params.get('q'))
+        (count, scenes) = self._client.find_scenes(criterion, page=page, **args)
+        if page * per_page < count:
+            scenes = scenes + self._client.find_scenes(criterion, page=page + 1, **args)[1]
+        ids = [scene['id'] for scene in scenes]
+        return scenes[ids.index(scene_id):] if scene_id in ids else [self._client.find_scene(scene_id)]
