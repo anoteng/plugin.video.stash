@@ -169,3 +169,35 @@ msgstr "Søk i scener"
 msgctxt "#30038"
 msgid "Favourite tags"
 msgstr "Favoritt-tagger"
+
+msgctxt "#30039"
+msgid "Add to favourites"
+msgstr "Legg til i favoritter"
+
+msgctxt "#30040"
+msgid "Remove from favourites"
+msgstr "Fjern fra favoritter"
+
+msgctxt "#30041"
+msgid "Rate…"
+msgstr "Vurder …"
+
+msgctxt "#30042"
+msgid "Performers in scene…"
+msgstr "Utøvere i scenen …"
+
+msgctxt "#30043"
+msgid "No rating"
+msgstr "Ingen vurdering"
+
+msgctxt "#30044"
+msgid "Favourite performer"
+msgstr "Favorittutøver"
+
+msgctxt "#30045"
+msgid "added to favourites"
+msgstr "lagt til i favoritter"
+
+msgctxt "#30046"
+msgid "removed from favourites"
+msgstr "fjernet fra favoritter"

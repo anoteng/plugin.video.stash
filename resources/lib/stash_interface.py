@@ -31,8 +31,10 @@ SCENE_FIELDS = """
         image_path
       }
       performers {
+        id
         name
         image_path
+        favorite
       }
       tags {
         name
@@ -375,3 +377,24 @@ mutation sceneSaveActivity($id: ID!, $resume_time: Float, $playDuration: Float) 
 
     def ui_configuration(self) -> dict:
         return self.__call_graphql("{ configuration { ui } }")["configuration"]["ui"] or {}
+
+    def set_favorite(self, kind: str, id, favorite: bool) -> bool:
+        """kind: performer, tag or studio"""
+        mutation = """
+mutation {0}Update($input: {1}UpdateInput!) {{
+  {0}Update(input: $input) {{
+    favorite
+  }}
+}}
+""".format(kind, kind.capitalize())
+        result = self.__call_graphql(mutation, {'input': {'id': id, 'favorite': favorite}})
+        return result[kind + 'Update']['favorite']
+
+    def set_scene_rating(self, id, rating100):
+        self.__call_graphql("""
+mutation sceneUpdate($input: SceneUpdateInput!) {
+  sceneUpdate(input: $input) {
+    id
+  }
+}
+""", {'input': {'id': id, 'rating100': rating100}})

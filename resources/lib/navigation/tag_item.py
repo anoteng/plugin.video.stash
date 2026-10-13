@@ -23,6 +23,7 @@ class TagItem(NavigationItem):
             item = self._create_item(tag['name'], tag.get('description'), tag['image_path'], scenes,
                                      tag.get('favorite', False))
             url = self._create_url(tag['name'], criterion)
+            item.addContextMenuItems(self._favorite_menu('tag', tag['id'], tag.get('favorite', False)))
             items.append((item, url))
 
         return count, items

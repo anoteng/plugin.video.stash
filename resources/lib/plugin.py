@@ -196,6 +196,32 @@ def increment_o(params: dict):
         xbmc.executebuiltin('Notification(Stash, {} {})'.format(utils.local.get_localized(30009), o_count))
 
 
+def set_favorite(params: dict):
+    client.set_favorite(params['set_favorite'], params['id'], params.get('value') == '1')
+    xbmc.executebuiltin('Container.Refresh')
+
+
+def rate_scene(params: dict):
+    loc = utils.local.get_localized
+    labels = [loc(30043)] + ['★' * stars + '☆' * (5 - stars) for stars in range(1, 6)]
+    choice = xbmcgui.Dialog().select(loc(30041), labels)
+    if choice >= 0:
+        client.set_scene_rating(params['rate_scene'], choice * 20 if choice else None)
+        xbmc.executebuiltin('Container.Refresh')
+
+
+def scene_performers(params: dict):
+    performers = client.find_scenes({'id': {'modifier': 'EQUALS', 'value': int(params['scene_performers'])}},
+                                    per_page=1)[1][0]['performers']
+    labels = [('★ ' if p['favorite'] else '☆ ') + p['name'] for p in performers]
+    choice = xbmcgui.Dialog().select(utils.local.get_localized(30044), labels)
+    if choice >= 0:
+        performer = performers[choice]
+        favorite = client.set_favorite('performer', performer['id'], not performer['favorite'])
+        xbmc.executebuiltin('Notification(Stash, {}: {})'.format(
+            performer['name'], utils.local.get_localized(30045 if favorite else 30046)))
+
+
 def router(param_string: str):
     params = dict(parse_qsl(param_string, keep_blank_values=True))
 
@@ -214,5 +240,11 @@ def router(param_string: str):
             play(params)
         elif 'increment_o' in params:
             increment_o(params)
+        elif 'set_favorite' in params:
+            set_favorite(params)
+        elif 'rate_scene' in params:
+            rate_scene(params)
+        elif 'scene_performers' in params:
+            scene_performers(params)
     else:
         browse_root()

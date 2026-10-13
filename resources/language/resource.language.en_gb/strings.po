@@ -169,3 +169,35 @@ msgstr ""
 msgctxt "#30038"
 msgid "Favourite tags"
 msgstr ""
+
+msgctxt "#30039"
+msgid "Add to favourites"
+msgstr ""
+
+msgctxt "#30040"
+msgid "Remove from favourites"
+msgstr ""
+
+msgctxt "#30041"
+msgid "Rate…"
+msgstr ""
+
+msgctxt "#30042"
+msgid "Performers in scene…"
+msgstr ""
+
+msgctxt "#30043"
+msgid "No rating"
+msgstr ""
+
+msgctxt "#30044"
+msgid "Favourite performer"
+msgstr ""
+
+msgctxt "#30045"
+msgid "added to favourites"
+msgstr ""
+
+msgctxt "#30046"
+msgid "removed from favourites"
+msgstr ""

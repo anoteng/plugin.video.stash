@@ -68,6 +68,12 @@ class NavigationItem(ABC):
 
         return item
 
+    @staticmethod
+    def _favorite_menu(kind: str, id, favorite: bool) -> [(str, str)]:
+        label = local.get_localized(30040 if favorite else 30039)
+        url = utils.get_url(set_favorite=kind, id=id, value=0 if favorite else 1)
+        return [(label, 'RunPlugin({})'.format(url))]
+
     def _create_url(self, title: str, criterion: dict, **kwargs) -> str:
         kwargs['criterion'] = json.dumps(criterion)
         kwargs['list'] = self._browse_for

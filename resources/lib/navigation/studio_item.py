@@ -15,6 +15,7 @@ class StudioItem(NavigationItem):
             item = self._create_item(studio['name'], studio['details'], studio['image_path'],
                                      studio.get('scene_count'), studio.get('favorite', False))
             url = self._create_url(studio['name'], criterion, sort_field='date', sort_dir='desc')
+            item.addContextMenuItems(self._favorite_menu('studio', studio['id'], studio.get('favorite', False)))
             items.append((item, url))
 
         return count, items
