@@ -17,6 +17,7 @@ FINISHED_PERCENT = 98
 PLAYING_PROPERTY = 'plugin.video.stash.playing_scene'
 # "<scene id>:<seconds>", set by play_from when the user chooses to resume
 START_OFFSET_PROPERTY = 'plugin.video.stash.start_offset'
+SERVICE_PROPERTY = 'plugin.video.stash.service'
 
 
 def log(message: str):
@@ -132,12 +133,22 @@ class Player(xbmc.Player):
 
 
 def run():
+    # Kodi can start the service just after the add-on was disabled (or start it twice when it is
+    # disabled and enabled quickly); such an instance never gets an abort request and would keep
+    # Kodi from shutting down and report playback twice. The newest instance wins.
+    token = str(time.time())
+    window = xbmcgui.Window(10000)
+    window.setProperty(SERVICE_PROPERTY, token)
     log('playback reporting started')
     monitor = xbmc.Monitor()
     player = Player()
     last = time.monotonic()
     while not monitor.waitForAbort(1):
+        if window.getProperty(SERVICE_PROPERTY) != token \
+                or not xbmc.getCondVisibility('System.AddonIsEnabled(plugin.video.stash)'):
+            break
         now = time.monotonic()
         player.poll(now - last)
         last = now
     player.finish()
+    log('playback reporting stopped')
