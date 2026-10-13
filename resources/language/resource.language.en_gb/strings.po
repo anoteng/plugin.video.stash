@@ -77,3 +77,95 @@ msgstr ""
 msgctxt "#30015"
 msgid "Max Resolution"
 msgstr ""
+
+msgctxt "#30016"
+msgid "Search"
+msgstr ""
+
+msgctxt "#30017"
+msgid "Recently added"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Continue watching"
+msgstr ""
+
+msgctxt "#30019"
+msgid "Recently played"
+msgstr ""
+
+msgctxt "#30020"
+msgid "Random"
+msgstr ""
+
+msgctxt "#30021"
+msgid "Favourite performers"
+msgstr ""
+
+msgctxt "#30022"
+msgid "Next page"
+msgstr ""
+
+msgctxt "#30023"
+msgid "page {} of {}"
+msgstr ""
+
+msgctxt "#30024"
+msgid "Sort by…"
+msgstr ""
+
+msgctxt "#30025"
+msgid "Title"
+msgstr ""
+
+msgctxt "#30026"
+msgid "Date added"
+msgstr ""
+
+msgctxt "#30027"
+msgid "Date"
+msgstr ""
+
+msgctxt "#30028"
+msgid "Rating"
+msgstr ""
+
+msgctxt "#30029"
+msgid "Play count"
+msgstr ""
+
+msgctxt "#30030"
+msgid "Last played"
+msgstr ""
+
+msgctxt "#30031"
+msgid "Duration"
+msgstr ""
+
+msgctxt "#30032"
+msgid "O-counter"
+msgstr ""
+
+msgctxt "#30033"
+msgid "Reverse order"
+msgstr ""
+
+msgctxt "#30034"
+msgid "Items per page"
+msgstr ""
+
+msgctxt "#30035"
+msgid "Interface"
+msgstr ""
+
+msgctxt "#30036"
+msgid "{} scenes"
+msgstr ""
+
+msgctxt "#30037"
+msgid "Search scenes"
+msgstr ""
+
+msgctxt "#30038"
+msgid "Favourite tags"
+msgstr ""

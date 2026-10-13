@@ -1,3 +1,5 @@
+import json
+import random
 import sys
 from urllib.parse import parse_qsl
 from typing import Optional
@@ -7,7 +9,7 @@ import xbmcgui
 import xbmcplugin
 from resources.lib import utils
 from resources.lib.listing import create_listing, Listing, SceneListing
-from resources.lib.navigation import NavigationItem
+from resources.lib.navigation import NavigationItem, PerformerItem, TagItem
 from resources.lib.stash_interface import StashInterface
 
 utils.BASE_URL = sys.argv[0]
@@ -48,22 +50,43 @@ def run():
     router(sys.argv[2][1:])
 
 
+def _folder(label: str, url: str, icon: str = 'DefaultFolder.png', is_folder: bool = True):
+    item = xbmcgui.ListItem(label=label)
+    item.setArt({'icon': icon})
+    xbmcplugin.addDirectoryItem(_HANDLE, url, item, is_folder)
+
+
 def browse_root():
     xbmcplugin.setPluginCategory(_HANDLE, 'Stash')
     xbmcplugin.setContent(_HANDLE, 'videos')
+
+    loc = utils.local.get_localized
+    _folder(loc(30016), utils.get_url(search='scenes'), 'DefaultAddonsSearch.png', is_folder=False)
+    _folder(loc(30017), utils.get_url(list='scenes', title=loc(30017), sort_field='created_at', sort_dir='desc'),
+            'DefaultRecentlyAddedMovies.png')
+    _folder(loc(30018), utils.get_url(list='scenes', title=loc(30018), sort_field='last_played_at', sort_dir='desc',
+                                      criterion=json.dumps({'resume_time': {'modifier': 'GREATER_THAN', 'value': 0}})),
+            'DefaultInProgressShows.png')
+    _folder(loc(30019), utils.get_url(list='scenes', title=loc(30019), sort_field='last_played_at', sort_dir='desc',
+                                      criterion=json.dumps({'play_count': {'modifier': 'GREATER_THAN', 'value': 0}})),
+            'DefaultRecentlyAddedEpisodes.png')
+    _folder(loc(30020), utils.get_url(list='scenes', title=loc(30020), sort_field=random_sort()))
+    for favorites in (PerformerItem(client, 'scenes', favorites=True), TagItem(client, 'scenes', favorites=True)):
+        (item, url) = favorites.get_root_item()
+        xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
     listing = SceneListing(client)
     for (item, url) in listing.get_filters():
         xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
-    (item, url) = listing.get_root_item(utils.local.get_localized(30002))
+    (item, url) = listing.get_root_item(loc(30002))
     xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
     for navItem in listing.get_navigation():
         (item, url) = navItem.get_root_item()
         xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
-    item = xbmcgui.ListItem(label=utils.local.get_localized(30010))
+    item = xbmcgui.ListItem(label=loc(30010))
     url = utils.get_url(browse='scene_markers')
     xbmcplugin.addDirectoryItem(_HANDLE, url, item, True)
 
@@ -98,7 +121,40 @@ def list_items(params: dict):
 def browse_for(params: dict):
     listing = create_listing(params['browse_for'], client)
     navigation = listing.get_navigation_item(params)
-    navigation.list_items()
+    navigation.list_items(params)
+
+
+def random_sort() -> str:
+    # A seed keeps the order stable while paging, like the random sort in Stash' UI
+    return 'random_{}'.format(random.randint(0, 99999999))
+
+
+def search(params: dict):
+    loc = utils.local.get_localized
+    query = xbmcgui.Dialog().input(loc(30037))
+    if query:
+        url = utils.get_url(list=params['search'], q=query, title='{}: {}'.format(loc(30016), query),
+                            sort_field='date', sort_dir='desc')
+        xbmc.executebuiltin('Container.Update({})'.format(url))
+
+
+def choose_sort(params: dict):
+    listing = create_listing(params.pop('choose_sort'), client)
+    options = listing.sort_options()
+    labels = [label for (label, _, _) in options] + [utils.local.get_localized(30033)]
+    choice = xbmcgui.Dialog().select(utils.local.get_localized(30024), labels)
+    if choice < 0:
+        return
+
+    params.pop('page', None)
+    if choice == len(options):
+        params['sort_dir'] = 'asc' if params.get('sort_dir', 'asc').lower() == 'desc' else 'desc'
+    else:
+        (_, field, direction) = options[choice]
+        params['sort_field'] = random_sort() if field == 'random' else field
+        params['sort_dir'] = direction
+
+    xbmc.executebuiltin('Container.Update({},replace)'.format(utils.get_url(**params)))
 
 
 def get_mp4_stream(sceneStreams: dict) -> str:
@@ -132,7 +188,7 @@ def play(params: dict):
 
 def increment_o(params: dict):
     if 'scene' in params:
-        o_count = client.scene_increment_o(params['scene'])
+        o_count = client.scene_add_o(params['scene'])
         xbmc.executebuiltin('Notification(Stash, {} {})'.format(utils.local.get_localized(30009), o_count))
 
 
@@ -140,7 +196,11 @@ def router(param_string: str):
     params = dict(parse_qsl(param_string, keep_blank_values=True))
 
     if params:
-        if 'browse_for' in params:
+        if 'choose_sort' in params:
+            choose_sort(params)
+        elif 'search' in params:
+            search(params)
+        elif 'browse_for' in params:
             browse_for(params)
         elif 'browse' in params:
             browse(params)
