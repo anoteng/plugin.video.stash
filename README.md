@@ -59,3 +59,25 @@ support. As an alternative you can edit the settings file manually.
 2. Open file `addon_data/plugin.video.stash/settings.xml`
 3. Change line `<setting id="api_key" default="true" />` to `<setting
    id="api_key">[your API Key]</setting>`
+
+## Playback reporting
+Playback in Kodi is reported back to Stash the same way Stash' own player
+does it: the play count is incremented once the *Minimum Play Percent* from
+Stash' interface settings is reached, and the resume point and play duration
+are saved while playing. Disable *Track Activity* in Stash to turn this off.
+
+## O-counter
+Use *Increment O-counter* in a scene's context menu. To increment it for the
+scene that is currently playing, bind a key in a
+[keymap](https://kodi.wiki/view/Keymap), for example
+`userdata/keymaps/stash.xml`:
+
+```xml
+<keymap>
+  <FullscreenVideo>
+    <keyboard>
+      <o>RunPlugin(plugin://plugin.video.stash/?increment_o)</o>
+    </keyboard>
+  </FullscreenVideo>
+</keymap>
+```
