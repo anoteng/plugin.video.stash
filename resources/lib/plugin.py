@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 import sys
@@ -235,16 +236,77 @@ def rate_scene(params: dict):
 
 
 def scene_performers(params: dict):
+    loc = utils.local.get_localized
     performers = client.find_scenes({'id': {'modifier': 'EQUALS', 'value': int(params['scene_performers'])}},
                                     per_page=1)[1][0]['performers']
-    labels = ['{} ({})'.format(utils.favorite_label(p['name']), utils.local.get_localized(30052)) if p['favorite']
-              else p['name'] for p in performers]
-    choice = xbmcgui.Dialog().select(utils.local.get_localized(30044), labels)
-    if choice >= 0:
-        performer = performers[choice]
+    labels = ['{} ({})'.format(utils.favorite_label(p['name']), loc(30052)) if p['favorite'] else p['name']
+              for p in performers]
+    choice = xbmcgui.Dialog().select(loc(30042), labels)
+    if choice < 0:
+        return
+    performer = performers[choice]
+    actions = [loc(30053), loc(30054), loc(30040 if performer['favorite'] else 30039)]
+    action = xbmcgui.Dialog().contextmenu(actions)
+    if action == 0:
+        criterion = {'performers': {'modifier': 'INCLUDES_ALL', 'value': [performer['id']]}}
+        url = utils.get_url(list='scenes', title=performer['name'], criterion=json.dumps(criterion),
+                            sort_field='date', sort_dir='desc')
+        xbmc.executebuiltin('Container.Update({})'.format(url))
+    elif action == 1:
+        performer_info({'performer_info': performer['id']})
+    elif action == 2:
         favorite = client.set_favorite('performer', performer['id'], not performer['favorite'])
-        xbmc.executebuiltin('Notification(Stash, {}: {})'.format(
-            performer['name'], utils.local.get_localized(30045 if favorite else 30046)))
+        xbmc.executebuiltin('Notification(Stash, {}: {})'.format(performer['name'], loc(30045 if favorite else 30046)))
+
+
+def performer_info(params: dict):
+    loc = utils.local.get_localized
+    performer = client.find_performer(params['performer_info'])
+    birthdate = performer.get('birthdate')
+    if birthdate:
+        born = birthdate
+        if not performer.get('death_date'):
+            today = datetime.date.today()
+            (year, month, day) = (int(part) for part in birthdate.split('-'))
+            born = '{} ({})'.format(birthdate, today.year - year - ((today.month, today.day) < (month, day)))
+    else:
+        born = None
+    facts = [
+        (30055, ', '.join(performer.get('alias_list') or [])),
+        (30056, born),
+        (30057, performer.get('death_date')),
+        (30058, performer.get('country')),
+        (30059, performer.get('ethnicity')),
+        (30060, performer.get('hair_color')),
+        (30061, performer.get('eye_color')),
+        (30062, '{} cm'.format(performer['height_cm']) if performer.get('height_cm') else None),
+        (30063, performer.get('measurements')),
+        (30064, performer.get('career_length')),
+        (30065, performer.get('tattoos')),
+        (30066, performer.get('piercings')),
+        (30006, performer.get('scene_count')),
+    ]
+    lines = ['[B]{}:[/B] {}'.format(loc(label), value) for (label, value) in facts if value]
+    plot = '\n'.join(lines)
+    if performer.get('details'):
+        plot = '{}\n\n{}'.format(plot, performer['details'])
+
+    name = performer['name']
+    if performer.get('disambiguation'):
+        name = '{} ({})'.format(name, performer['disambiguation'])
+    item = xbmcgui.ListItem(label=name)
+    info = item.getVideoInfoTag()
+    info.setMediaType('video')
+    info.setTitle(name)
+    info.setPlot(plot)
+    info.setGenres([tag['name'] for tag in performer.get('tags') or []])
+    info.setUserRating(round((performer.get('rating100') or 0) / 10))
+    if performer.get('country'):
+        info.setCountries([performer['country']])
+    image = client.add_api_key(performer.get('image_path'))
+    if image:
+        item.setArt({'thumb': image, 'poster': image})
+    xbmcgui.Dialog().info(item)
 
 
 def router(param_string: str):
@@ -273,5 +335,7 @@ def router(param_string: str):
             rate_scene(params)
         elif 'scene_performers' in params:
             scene_performers(params)
+        elif 'performer_info' in params:
+            performer_info(params)
     else:
         browse_root()

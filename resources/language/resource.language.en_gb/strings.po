@@ -225,3 +225,59 @@ msgstr ""
 msgctxt "#30052"
 msgid "favourite"
 msgstr ""
+
+msgctxt "#30053"
+msgid "Show scenes"
+msgstr ""
+
+msgctxt "#30054"
+msgid "Information"
+msgstr ""
+
+msgctxt "#30055"
+msgid "Aliases"
+msgstr ""
+
+msgctxt "#30056"
+msgid "Born"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Died"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Country"
+msgstr ""
+
+msgctxt "#30059"
+msgid "Ethnicity"
+msgstr ""
+
+msgctxt "#30060"
+msgid "Hair colour"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Eye colour"
+msgstr ""
+
+msgctxt "#30062"
+msgid "Height"
+msgstr ""
+
+msgctxt "#30063"
+msgid "Measurements"
+msgstr ""
+
+msgctxt "#30064"
+msgid "Career"
+msgstr ""
+
+msgctxt "#30065"
+msgid "Tattoos"
+msgstr ""
+
+msgctxt "#30066"
+msgid "Piercings"
+msgstr ""

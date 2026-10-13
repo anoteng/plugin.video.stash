@@ -398,3 +398,34 @@ mutation sceneUpdate($input: SceneUpdateInput!) {
   }
 }
 """, {'input': {'id': id, 'rating100': rating100}})
+
+    def find_performer(self, id):
+        return self.__call_graphql("""
+query findPerformer($id: ID!) {
+  findPerformer(id: $id) {
+    id
+    name
+    disambiguation
+    alias_list
+    birthdate
+    death_date
+    country
+    ethnicity
+    hair_color
+    eye_color
+    height_cm
+    measurements
+    career_length
+    tattoos
+    piercings
+    details
+    favorite
+    rating100
+    scene_count
+    image_path
+    tags {
+      name
+    }
+  }
+}
+""", {'id': id})['findPerformer']

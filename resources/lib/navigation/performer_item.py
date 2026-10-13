@@ -1,5 +1,6 @@
 from .navigation_item import NavigationItem
 from resources.lib.stash_interface import StashInterface
+from resources.lib import utils
 from resources.lib.utils import local
 
 
@@ -21,7 +22,9 @@ class PerformerItem(NavigationItem):
             item = self._create_item(name, performer['details'], performer['image_path'],
                                      performer.get('scene_count'), performer.get('favorite', False))
             url = self._create_url(name, criterion, sort_field='date', sort_dir='desc')
-            item.addContextMenuItems(self._favorite_menu('performer', performer['id'], performer.get('favorite', False)))
+            item.addContextMenuItems(
+                [(local.get_localized(30054), 'RunPlugin({})'.format(utils.get_url(performer_info=performer['id'])))] +
+                self._favorite_menu('performer', performer['id'], performer.get('favorite', False)))
             items.append((item, url))
 
         return count, items

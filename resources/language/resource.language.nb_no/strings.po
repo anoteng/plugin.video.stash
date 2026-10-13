@@ -225,3 +225,59 @@ msgstr "{} stjerner"
 msgctxt "#30052"
 msgid "favourite"
 msgstr "favoritt"
+
+msgctxt "#30053"
+msgid "Show scenes"
+msgstr "Vis scener"
+
+msgctxt "#30054"
+msgid "Information"
+msgstr "Informasjon"
+
+msgctxt "#30055"
+msgid "Aliases"
+msgstr "Alias"
+
+msgctxt "#30056"
+msgid "Born"
+msgstr "Født"
+
+msgctxt "#30057"
+msgid "Died"
+msgstr "Død"
+
+msgctxt "#30058"
+msgid "Country"
+msgstr "Land"
+
+msgctxt "#30059"
+msgid "Ethnicity"
+msgstr "Etnisitet"
+
+msgctxt "#30060"
+msgid "Hair colour"
+msgstr "Hårfarge"
+
+msgctxt "#30061"
+msgid "Eye colour"
+msgstr "Øyenfarge"
+
+msgctxt "#30062"
+msgid "Height"
+msgstr "Høyde"
+
+msgctxt "#30063"
+msgid "Measurements"
+msgstr "Mål"
+
+msgctxt "#30064"
+msgid "Career"
+msgstr "Karriere"
+
+msgctxt "#30065"
+msgid "Tattoos"
+msgstr "Tatoveringer"
+
+msgctxt "#30066"
+msgid "Piercings"
+msgstr "Piercinger"
