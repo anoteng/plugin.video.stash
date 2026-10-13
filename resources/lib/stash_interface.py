@@ -355,3 +355,23 @@ mutation sceneIncrementO($id: ID!) {
 }
 """, {'id': id})
             return result["sceneIncrementO"]
+
+    def scene_add_play(self, id):
+        result = self.__call_graphql("""
+mutation sceneAddPlay($id: ID!) {
+  sceneAddPlay(id: $id) {
+    count
+  }
+}
+""", {'id': id})
+        return result["sceneAddPlay"]["count"]
+
+    def scene_save_activity(self, id, resume_time: float, play_duration: float):
+        self.__call_graphql("""
+mutation sceneSaveActivity($id: ID!, $resume_time: Float, $playDuration: Float) {
+  sceneSaveActivity(id: $id, resume_time: $resume_time, playDuration: $playDuration)
+}
+""", {'id': id, 'resume_time': resume_time, 'playDuration': play_duration})
+
+    def ui_configuration(self) -> dict:
+        return self.__call_graphql("{ configuration { ui } }")["configuration"]["ui"] or {}

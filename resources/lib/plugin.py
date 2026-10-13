@@ -10,6 +10,7 @@ import xbmcplugin
 from resources.lib import utils
 from resources.lib.listing import create_listing, Listing, SceneListing
 from resources.lib.navigation import NavigationItem, PerformerItem, TagItem
+from resources.lib.service import PLAYING_PROPERTY
 from resources.lib.stash_interface import StashInterface
 
 utils.BASE_URL = sys.argv[0]
@@ -187,8 +188,11 @@ def play(params: dict):
 
 
 def increment_o(params: dict):
-    if 'scene' in params:
-        o_count = client.scene_add_o(params['scene'])
+    # Without a scene: the scene currently playing, so this can be bound to a key, e.g. in a keymap:
+    # <key>RunPlugin(plugin://plugin.video.stash/?increment_o)</key>
+    scene = params.get('scene') or xbmcgui.Window(10000).getProperty(PLAYING_PROPERTY)
+    if scene:
+        o_count = client.scene_add_o(scene)
         xbmc.executebuiltin('Notification(Stash, {} {})'.format(utils.local.get_localized(30009), o_count))
 
 
