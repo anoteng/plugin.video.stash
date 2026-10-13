@@ -125,6 +125,7 @@ class Player(xbmc.Player):
 
 
 def run():
+    log('playback reporting started')
     monitor = xbmc.Monitor()
     player = Player()
     last = time.monotonic()
