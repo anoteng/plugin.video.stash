@@ -21,6 +21,11 @@ def autoplay() -> bool:
     return xbmcaddon.Addon().getSetting('autoplay') == 'true'
 
 
+def favorite_label(label: str) -> str:
+    # Kodi's default fonts have no star glyphs, so favourites are shown in colour
+    return '[COLOR gold]{}[/COLOR]'.format(label)
+
+
 def duration(seconds: float) -> str:
     seconds = int(seconds)
     if seconds >= 3600:

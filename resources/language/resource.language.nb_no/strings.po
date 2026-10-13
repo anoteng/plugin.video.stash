@@ -191,8 +191,8 @@ msgid "No rating"
 msgstr "Ingen vurdering"
 
 msgctxt "#30044"
-msgid "Favourite performer"
-msgstr "Favorittutøver"
+msgid "Add or remove favourite performer"
+msgstr "Legg til eller fjern favorittutøver"
 
 msgctxt "#30045"
 msgid "added to favourites"
@@ -213,3 +213,15 @@ msgstr "Spill fra starten"
 msgctxt "#30049"
 msgid "Play next scene automatically"
 msgstr "Spill neste scene automatisk"
+
+msgctxt "#30050"
+msgid "1 star"
+msgstr "1 stjerne"
+
+msgctxt "#30051"
+msgid "{} stars"
+msgstr "{} stjerner"
+
+msgctxt "#30052"
+msgid "favourite"
+msgstr "favoritt"

@@ -53,7 +53,7 @@ class NavigationItem(ABC):
 
     def _create_item(self, title: str, description: str = '', image_path: str = '', count: int = None,
                      favorite: bool = False) -> xbmcgui.ListItem:
-        label = '★ ' + title if favorite else title
+        label = utils.favorite_label(title) if favorite else title
         item = xbmcgui.ListItem(label=label, label2=str(count) if count is not None else '')
         info = item.getVideoInfoTag()
         info.setMediaType('video')

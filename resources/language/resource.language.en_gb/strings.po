@@ -191,7 +191,7 @@ msgid "No rating"
 msgstr ""
 
 msgctxt "#30044"
-msgid "Favourite performer"
+msgid "Add or remove favourite performer"
 msgstr ""
 
 msgctxt "#30045"
@@ -212,4 +212,16 @@ msgstr ""
 
 msgctxt "#30049"
 msgid "Play next scene automatically"
+msgstr ""
+
+msgctxt "#30050"
+msgid "1 star"
+msgstr ""
+
+msgctxt "#30051"
+msgid "{} stars"
+msgstr ""
+
+msgctxt "#30052"
+msgid "favourite"
 msgstr ""

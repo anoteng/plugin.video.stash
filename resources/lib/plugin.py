@@ -226,8 +226,9 @@ def set_favorite(params: dict):
 
 def rate_scene(params: dict):
     loc = utils.local.get_localized
-    labels = [loc(30043)] + ['★' * stars + '☆' * (5 - stars) for stars in range(1, 6)]
-    choice = xbmcgui.Dialog().select(loc(30041), labels)
+    labels = [loc(30043), loc(30050)] + [loc(30051).format(stars) for stars in range(2, 6)]
+    current = round(int(params.get('rating') or 0) / 20)
+    choice = xbmcgui.Dialog().select(loc(30041), labels, preselect=current)
     if choice >= 0:
         client.set_scene_rating(params['rate_scene'], choice * 20 if choice else None)
         xbmc.executebuiltin('Container.Refresh')
@@ -236,7 +237,8 @@ def rate_scene(params: dict):
 def scene_performers(params: dict):
     performers = client.find_scenes({'id': {'modifier': 'EQUALS', 'value': int(params['scene_performers'])}},
                                     per_page=1)[1][0]['performers']
-    labels = [('★ ' if p['favorite'] else '☆ ') + p['name'] for p in performers]
+    labels = ['{} ({})'.format(utils.favorite_label(p['name']), utils.local.get_localized(30052)) if p['favorite']
+              else p['name'] for p in performers]
     choice = xbmcgui.Dialog().select(utils.local.get_localized(30044), labels)
     if choice >= 0:
         performer = performers[choice]

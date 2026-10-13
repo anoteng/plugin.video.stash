@@ -66,7 +66,7 @@ class SceneListing(Listing):
                              'ActivateWindow(videos, {})'.format(get_url(list='scene_markers', scene=scene['id']))))
             menu.append(
                 (local.get_localized(30008), 'RunPlugin({})'.format(get_url(increment_o='', scene=scene['id']))))
-            menu.append((local.get_localized(30041), 'RunPlugin({})'.format(get_url(rate_scene=scene['id']))))
+            menu.append((local.get_localized(30041), 'RunPlugin({})'.format(get_url(rate_scene=scene['id'], rating=scene.get('rating100') or 0))))
             if scene['performers']:
                 menu.append((local.get_localized(30042),
                              'RunPlugin({})'.format(get_url(scene_performers=scene['id']))))
